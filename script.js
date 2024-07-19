@@ -287,6 +287,7 @@ document.addEventListener("DOMContentLoaded", async function () {
    document.getElementById("editProductDate").value = product.date;
 
    editProductSection.style.display = "block";
+   productListSection.style.display = "none";
  };
 
  // Soumettre les modifications du produit
@@ -315,6 +316,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
    alert("Produit modifié avec succès !");
    editProductSection.style.display = "none";
+   productListSection.style.display = "block";
    await fetchAndDisplayProducts(); // Rafraîchir la liste des produits
  });
 
