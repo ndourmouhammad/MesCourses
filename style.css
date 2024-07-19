@@ -1,0 +1,81 @@
+body, html {
+    height: 100%;
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+.container-fluid {
+    height: 100vh;
+}
+
+.row {
+    height: 100%;
+}
+
+.img-fluid {
+    object-fit: cover;
+}
+
+.login-form, .register-form, .add-product-form {
+    max-width: 400px;
+    padding: 2rem;
+}
+
+.navbar-brand {
+    font-weight: bold;
+}
+
+.btn-success {
+    background-color: #28a745;
+    border-color: #28a745;
+}
+
+
+.showproducts h2 {
+    font-weight: bold;
+}
+
+.card {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+}
+
+.card-body p {
+    margin: 0.5rem 0;
+}
+
+.card-body .btn {
+    width: 45%;
+}
+
+@media (max-width: 767.98px) {
+    header {
+        text-align: center;
+    }
+    
+    header .d-flex {
+        flex-direction: column;
+    }
+
+    header nav {
+        margin-top: 10px;
+    }
+
+    header button {
+        margin-top: 10px;
+    }
+
+    .card-body .btn {
+        width: 100%;
+    }
+}
+
+
+@media (max-width: 767.98px) {
+    .d-none.d-md-block {
+        display: none !important;
+    }
+    .my-auto {
+        padding: 2rem;
+    }
+}

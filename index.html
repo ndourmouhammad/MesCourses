@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gestion des Courses</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container mt-5">
+      <div id="authSection">
+        <!-- Inscription et connexion -->
+        <div id="signupPage" style="display: block; text-align: center">
+          <img src="img/MesCourses.png" alt="" />
+          <div class="row">
+            <div class="col-md-6 d-none d-md-block p-0">
+              <img
+                src="img/signup.png"
+                alt="Inscription"
+                class="img-fluid h-100"
+              />
+            </div>
+            <div class="col-md-6 my-auto">
+              <div class="register-form mx-auto" style="text-align: left">
+                <h1 class="text-center">Inscription</h1>
+                <form id="signupForm">
+                  <div class="form-group">
+                    <label for="name">Nom</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="name"
+                      required
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="email">Adresse email</label>
+                    <input
+                      type="email"
+                      class="form-control"
+                      id="email"
+                      required
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="password">Mot de passe</label>
+                    <input
+                      type="password"
+                      class="form-control"
+                      id="password"
+                      required
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="confirmPassword"
+                      >Confirmer le mot de passe</label
+                    >
+                    <input
+                      type="password"
+                      class="form-control"
+                      id="confirmPassword"
+                      required
+                    />
+                  </div>
+                  <button type="submit" class="btn btn-success btn-block">
+                    S'inscrire
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+          <button id="showLoginPage" class="btn btn-link">
+            Déjà un compte ? Connectez-vous ici
+          </button>
+        </div>
+        <div id="loginPage" style="display: none">
+          <div class="row">
+            <div class="col-md-6 d-none d-md-block p-0">
+              <img
+                src="img/login.png"
+                alt="Connexion"
+                class="img-fluid h-100"
+              />
+            </div>
+            <div class="col-md-6 my-auto">
+              <div class="login-form mx-auto">
+                <h1 class="text-center">MesCourses</h1>
+                <h3 class="text-center">Connexion</h3>
+                <form id="loginForm">
+                  <div class="form-group">
+                    <label for="loginEmail">Adresse email</label>
+                    <input
+                      type="email"
+                      class="form-control"
+                      id="loginEmail"
+                      required
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="loginPassword">Mot de passe</label>
+                    <input
+                      type="password"
+                      class="form-control"
+                      id="loginPassword"
+                      required
+                    />
+                  </div>
+                  <button type="submit" class="btn btn-success btn-block">
+                    Se connecter
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+          <button id="showSignupPage" class="btn btn-link">
+            Pas de compte ? Inscrivez-vous ici
+          </button>
+        </div>
+      </div>
+      <div id="appSection" style="display: none">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+          <a class="navbar-brand" href="#">MesCourses</a>
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-toggle="collapse"
+            data-target="#navbarNav"
+            aria-controls="navbarNav"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+              <li class="nav-item">
+                <a class="nav-link" href="#" id="showAddProductSection"
+                  >Ajouter un produit</a
+                >
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#" id="showProductListSection"
+                  >Les produits</a
+                >
+              </li>
+              <li class="nav-item">
+                <a class="nav-link btn btn-success" href="#" id="logoutButton"
+                  >Déconnexion</a
+                >
+              </li>
+            </ul>
+          </div>
+        </nav>
+        <div id="addProductSection" style="display: block">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-md-6 d-none d-md-block p-0">
+                <img
+                  src="img/add.png"
+                  alt="Ajouter un produit"
+                  class="img-fluid h-100"
+                />
+              </div>
+              <div class="col-md-6 my-auto">
+                <div class="add-product-form mx-auto">
+                  <h3 class="text-center">Ajouter un produit</h3>
+                  <form id="addProductForm">
+                    <div class="form-group">
+                      <label for="productName">Libellé du produit</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="productName"
+                        required
+                      />
+                    </div>
+                    <div class="form-group">
+                      <label for="productPrice">Prix unitaire</label>
+                      <input
+                        type="number"
+                        class="form-control"
+                        id="productPrice"
+                        required
+                      />
+                    </div>
+                    <div class="form-group">
+                      <label for="productQuantity">Quantité</label>
+                      <input
+                        type="number"
+                        class="form-control"
+                        id="productQuantity"
+                        required
+                      />
+                    </div>
+                    <div class="form-group">
+                      <label for="selectedDate">Date</label>
+                      <input
+                        type="date"
+                        class="form-control"
+                        id="selectedDate"
+                        required
+                      />
+                    </div>
+                    <button type="submit" class="btn btn-success btn-block">
+                      Ajouter
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="productListSection" style="display: none">
+          <div class="text-center mb-4">
+            <h2>Mes produits</h2>
+          </div>
+          <div class="text-center mb-4">
+            <label for="date">Date</label>
+            <input
+              type="text"
+              id="date"
+              class="form-control d-inline-block"
+              style="width: auto"
+              value="19/07/2024"
+            />
+          </div>
+          <div class="row" id="productList">
+            <!-- Product Cards will be displayed here -->
+          </div>
+        </div>
+        <div id="editProductSection" style="display: none">
+          <h3>Modifier le Produit</h3>
+          <form id="editProductForm">
+            <div class="form-group">
+              <label for="editProductName">Nom du Produit</label>
+              <input
+                type="text"
+                id="editProductName"
+                class="form-control"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="editProductPrice">Prix</label>
+              <input
+                type="number"
+                id="editProductPrice"
+                class="form-control"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="editProductQuantity">Quantité</label>
+              <input
+                type="number"
+                id="editProductQuantity"
+                class="form-control"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="editProductDate">Date</label>
+              <input
+                type="date"
+                id="editProductDate"
+                class="form-control"
+                required
+              />
+            </div>
+            <button type="submit" class="btn btn-primary">Mettre à Jour</button>
+          </form>
+          <button id="cancelEditButton" class="btn btn-secondary">Annuler</button>
+        </div>
+        
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
