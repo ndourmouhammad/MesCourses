@@ -14,19 +14,21 @@
     <div class="container mt-5">
       <div id="authSection">
         <!-- Inscription et connexion -->
-        <div id="signupPage" style="display: block; text-align: center">
-          <img src="img/MesCourses.png" alt="" />
+        <div id="signupPage" style="display: block; text-align: center; ">
+          
           <div class="row">
             <div class="col-md-6 d-none d-md-block p-0">
               <img
                 src="img/signup.png"
                 alt="Inscription"
-                class="img-fluid h-100"
+                class="img-fluid "
+                style="height: 70%;"
               />
             </div>
-            <div class="col-md-6 my-auto">
+            <div class="col-md-6 " >
               <div class="register-form mx-auto" style="text-align: left">
-                <h1 class="text-center">Inscription</h1>
+                <img class="mb-5" src="img/MesCourses.png" alt="" />
+                <h1 class="text-start">Inscription</h1>
                 <form id="signupForm">
                   <div class="form-group">
                     <label for="name">Nom</label>
@@ -35,6 +37,7 @@
                       class="form-control"
                       id="name"
                       required
+                      placeholder="ex: Mouhammad"
                     />
                   </div>
                   <div class="form-group">
@@ -44,6 +47,7 @@
                       class="form-control"
                       id="email"
                       required
+                      placeholder="ex: example@example.com"
                     />
                   </div>
                   <div class="form-group">
@@ -53,6 +57,7 @@
                       class="form-control"
                       id="password"
                       required
+                      placeholder="ex: **********"
                     />
                   </div>
                   <div class="form-group">
@@ -64,18 +69,20 @@
                       class="form-control"
                       id="confirmPassword"
                       required
+                      placeholder="ex: **********"
                     />
                   </div>
-                  <button type="submit" class="btn btn-success btn-block">
+                  <button type="submit" class="btn mt-2 mb-2" style="background-color: #2ECC71; border: #2ECC71 1px solid; border-radius: 25px; color: white;">
                     S'inscrire
                   </button>
                 </form>
+                <button id="showLoginPage" class="btn btn-link mt-3 text-start">
+                    Déjà un compte ? Connectez-vous ici
+                  </button>
               </div>
             </div>
           </div>
-          <button id="showLoginPage" class="btn btn-link">
-            Déjà un compte ? Connectez-vous ici
-          </button>
+          
         </div>
         <div id="loginPage" style="display: none">
           <div class="row">
@@ -83,14 +90,15 @@
               <img
                 src="img/login.png"
                 alt="Connexion"
-                class="img-fluid h-100"
+                class="img-fluid "
+                style="height: 70%;"
               />
             </div>
-            <div class="col-md-6 my-auto">
+            <div class="col-md-6 ">
               <div class="login-form mx-auto">
-                <h1 class="text-center">MesCourses</h1>
-                <h3 class="text-center">Connexion</h3>
-                <form id="loginForm">
+                <img class="mb-5" src="img/MesCourses.png" alt="" />
+                <h1 class="text-start">Connexion</h1>
+                <form id="loginForm" class="mt-5">
                   <div class="form-group">
                     <label for="loginEmail">Adresse email</label>
                     <input
@@ -98,6 +106,7 @@
                       class="form-control"
                       id="loginEmail"
                       required
+                      placeholder="ex: example@example.com"
                     />
                   </div>
                   <div class="form-group">
@@ -107,18 +116,20 @@
                       class="form-control"
                       id="loginPassword"
                       required
+                      placeholder="ex: **********"
                     />
                   </div>
-                  <button type="submit" class="btn btn-success btn-block">
+                  <button type="submit" class="btn mt-2 mb-2" style="background-color: #2ECC71; border: #2ECC71 1px solid; border-radius: 25px; color: white;">
                     Se connecter
                   </button>
                 </form>
+                <button id="showSignupPage" class="btn btn-link mt-3 text-start">
+                    Pas de compte ? Inscrivez-vous ici
+                  </button>
               </div>
             </div>
           </div>
-          <button id="showSignupPage" class="btn btn-link">
-            Pas de compte ? Inscrivez-vous ici
-          </button>
+          
         </div>
       </div>
       <div id="appSection" style="display: none">
@@ -218,7 +229,6 @@
           <div class="text-center mb-4">
             <h2>Mes produits</h2>
           </div>
-          <!-- Ajoutez ce code au niveau du produitListSection -->
           <div class="mb-3">
             <label for="filterDate" class="form-label">Filtrer par date</label>
             <input type="date" id="filterDate" class="form-control" />
@@ -236,54 +246,72 @@
           <div id="totalPriceSection" style="display: none;">
             <h4>Total des produits : <span id="totalPrice"></span> FCFA</h4>
           </div>
-          
         </div>
-
         <div id="editProductSection" style="display: none">
-          <h3>Modifier le Produit</h3>
-          <form id="editProductForm">
-            <input type="hidden" id="editProductId" />
-            <div class="form-group">
-              <label for="editProductName">Nom du Produit</label>
-              <input
-                type="text"
-                id="editProductName"
-                class="form-control"
-                required
-              />
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-md-6 d-none d-md-block p-0">
+                <img
+                  src="img/login.png"
+                  alt="Modifier le produit"
+                  class="img-fluid h-100"
+                />
+              </div>
+              <div class="col-md-6 my-auto">
+                <div class="edit-product-form mx-auto">
+                  <h3 class="text-center">Modifier le produit</h3>
+                  <form id="editProductForm">
+                    <input type="hidden" id="editProductId" />
+                    <div class="form-group">
+                      <label for="editProductName">Nom du Produit</label>
+                      <input
+                        type="text"
+                        id="editProductName"
+                        class="form-control"
+                        required
+                      />
+                    </div>
+                    <div class="form-group">
+                      <label for="editProductPrice">Prix</label>
+                      <input
+                        type="number"
+                        id="editProductPrice"
+                        class="form-control"
+                        required
+                      />
+                    </div>
+                    <div class="form-group">
+                      <label for="editProductQuantity">Quantité</label>
+                      <input
+                        type="number"
+                        id="editProductQuantity"
+                        class="form-control"
+                        required
+                      />
+                    </div>
+                    <div class="form-group">
+                      <label for="editProductDate">Date</label>
+                      <input
+                        type="date"
+                        id="editProductDate"
+                        class="form-control"
+                        required
+                      />
+                    </div>
+                    <button type="submit" class="btn btn-success btn-block">
+                      Mettre à Jour
+                    </button>
+                    <button
+                      id="cancelEditButton"
+                      class="btn btn-secondary btn-block mt-2"
+                    >
+                      Annuler
+                    </button>
+                  </form>
+                </div>
+              </div>
             </div>
-            <div class="form-group">
-              <label for="editProductPrice">Prix</label>
-              <input
-                type="number"
-                id="editProductPrice"
-                class="form-control"
-                required
-              />
-            </div>
-            <div class="form-group">
-              <label for="editProductQuantity">Quantité</label>
-              <input
-                type="number"
-                id="editProductQuantity"
-                class="form-control"
-                required
-              />
-            </div>
-            <div class="form-group">
-              <label for="editProductDate">Date</label>
-              <input
-                type="date"
-                id="editProductDate"
-                class="form-control"
-                required
-              />
-            </div>
-            <button type="submit" class="btn btn-primary">Mettre à Jour</button>
-          </form>
-          <button id="cancelEditButton" class="btn btn-secondary">
-            Annuler
-          </button>
+          </div>
         </div>
       </div>
     </div>
@@ -292,5 +320,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="script.js"></script>
-  </body>
-</html>
+
+
+    
+
