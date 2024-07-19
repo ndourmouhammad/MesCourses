@@ -218,15 +218,17 @@
           <div class="text-center mb-4">
             <h2>Mes produits</h2>
           </div>
-          <div class="text-center mb-4">
-            <label for="date">Date</label>
-            <input
-              type="text"
-              id="date"
-              class="form-control d-inline-block"
-              style="width: auto"
-              value="19/07/2024"
-            />
+          <!-- Ajoutez ce code au niveau du produitListSection -->
+          <div class="mb-3">
+            <label for="filterDate" class="form-label">Filtrer par date</label>
+            <input type="date" id="filterDate" class="form-control" />
+          </div>
+          <div
+            id="noProductsMessage"
+            class="alert alert-info"
+            style="display: none"
+          >
+            Aucun produit trouvé pour cette date.
           </div>
           <div class="row" id="productList">
             <!-- Product Cards will be displayed here -->
@@ -235,7 +237,7 @@
         <div id="editProductSection" style="display: none">
           <h3>Modifier le Produit</h3>
           <form id="editProductForm">
-            <input type="hidden" id="editProductId">
+            <input type="hidden" id="editProductId" />
             <div class="form-group">
               <label for="editProductName">Nom du Produit</label>
               <input
@@ -274,9 +276,10 @@
             </div>
             <button type="submit" class="btn btn-primary">Mettre à Jour</button>
           </form>
-          <button id="cancelEditButton" class="btn btn-secondary">Annuler</button>
+          <button id="cancelEditButton" class="btn btn-secondary">
+            Annuler
+          </button>
         </div>
-        
       </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>

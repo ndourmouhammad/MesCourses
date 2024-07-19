@@ -146,7 +146,14 @@ document.addEventListener("DOMContentLoaded", async function () {
     await fetchAndDisplayProducts(); // Rafraîchir la liste des produits
   });
 
-  async function fetchAndDisplayProducts() {
+ // Référence au champ de filtrage par date
+ const filterDateInput = document.getElementById("filterDate");
+
+ filterDateInput.addEventListener("change", async function () {
+   await fetchAndDisplayProducts(); // Rafraîchir la liste des produits avec le filtre appliqué
+ });
+
+ async function fetchAndDisplayProducts() {
     console.log("Fetching Products");
 
     if (!currentUserId) {
@@ -154,9 +161,16 @@ document.addEventListener("DOMContentLoaded", async function () {
       return;
     }
 
-    const { data, error } = await database.from("products")
-      .select("*")
-      .eq("user_id", currentUserId); // Filtrer par user_id
+    const selectedDate = filterDateInput.value;
+
+    // Construire la requête en fonction de la présence ou non de selectedDate
+    let query = database.from("products").select("*").eq("user_id", currentUserId);
+
+    if (selectedDate) {
+      query = query.eq("date", selectedDate); // Filtrer par date si elle est sélectionnée
+    }
+
+    const { data, error } = await query;
 
     if (error) {
       console.error("Erreur lors de la récupération des produits:", error.message);
@@ -165,36 +179,44 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
 
     const productList = document.getElementById("productList");
+    const noProductsMessage = document.getElementById("noProductsMessage");
+    
     productList.innerHTML = "";
+    
+    if (data.length === 0) {
+      noProductsMessage.style.display = "block";
+    } else {
+      noProductsMessage.style.display = "none";
 
-    data.forEach((product) => {
-      const productCard = document.createElement("div");
-      productCard.className = "col-md-4 mb-4";
-      productCard.innerHTML = `
-        <div class="card mb-3 ${product.purchased ? 'purchased' : ''}">
-          <div class="card-body">
-            <h5 class="card-title">Libelle : ${product.name}</h5>
-            <p class="card-text">Prix : ${product.price} FCFA</p>
-            <p class="card-text">Quantité : ${product.quantity}</p>
-            
-            <div>
-              <label>
-                <input type="checkbox" ${product.purchased ? 'checked' : ''} data-product-id="${product.id}">
-                Marquer comme acheté
-              </label>
+      data.forEach((product) => {
+        const productCard = document.createElement("div");
+        productCard.className = "col-md-4 mb-4";
+        productCard.innerHTML = `
+          <div class="card mb-3 ${product.purchased ? 'purchased' : ''}">
+            <div class="card-body">
+              <h5 class="card-title">Libelle : ${product.name}</h5>
+              <p class="card-text">Prix : ${product.price} FCFA</p>
+              <p class="card-text">Quantité : ${product.quantity}</p>
+              
+              <div>
+                <label>
+                  <input type="checkbox" ${product.purchased ? 'checked' : ''} data-product-id="${product.id}">
+                  Marquer comme acheté
+                </label>
+              </div>
+              <button class="btn btn-danger" onclick="deleteProduct(${product.id})">Supprimer</button>
+              <button class="btn btn-primary" onclick="editProduct(${product.id})">Modifier</button>
             </div>
-            <button class="btn btn-danger" onclick="deleteProduct(${product.id})">Supprimer</button>
-            <button class="btn btn-primary" onclick="editProduct(${product.id})">Modifier</button>
           </div>
-        </div>
-      `;
-      productList.appendChild(productCard);
+        `;
+        productList.appendChild(productCard);
 
-      const checkbox = productCard.querySelector('input[type="checkbox"]');
-      checkbox.addEventListener("change", async () => {
-        await markAsPurchased(product.id, checkbox.checked);
+        const checkbox = productCard.querySelector('input[type="checkbox"]');
+        checkbox.addEventListener("change", async () => {
+          await markAsPurchased(product.id, checkbox.checked);
+        });
       });
-    });
+    }
   }
 
   async function markAsPurchased(productId, isPurchased) {
