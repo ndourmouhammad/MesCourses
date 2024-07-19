@@ -11,8 +11,8 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <div class="container mt-5">
-      <div id="authSection">
+   
+      <div id="authSection" class="container mt-5">
         <!-- Inscription et connexion -->
         <div id="signupPage" style="display: block; text-align: center; ">
           
@@ -133,8 +133,8 @@
         </div>
       </div>
       <div id="appSection" style="display: none">
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-          <a class="navbar-brand" href="#">MesCourses</a>
+        <nav class="navbar navbar-expand-lg navbar-light" style="margin-top: -3rem; background-color: #BAE9CE;">
+          <a class="navbar-brand" href="#"><img src="img/MesCourses.png" alt="" /></a>
           <button
             class="navbar-toggler"
             type="button"
@@ -149,36 +149,37 @@
           <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ml-auto">
               <li class="nav-item">
-                <a class="nav-link" href="#" id="showAddProductSection"
+                <a class="nav-link" href="#" id="showAddProductSection" style="font-size: 20px; color: #000;"
                   >Ajouter un produit</a
                 >
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#" id="showProductListSection"
+                <a class="nav-link" href="#" id="showProductListSection" style="font-size: 20px; color: #000;"
                   >Les produits</a
                 >
               </li>
               <li class="nav-item">
-                <a class="nav-link btn btn-success" href="#" id="logoutButton"
+                <a class="nav-link btn btn-success" href="#" id="logoutButton" style="background-color: #2ECC71; border: #2ECC71 1px solid; border-radius: 25px; color: white;"
                   >Déconnexion</a
                 >
               </li>
             </ul>
           </div>
         </nav>
-        <div id="addProductSection" style="display: block">
+        <div id="addProductSection" style="display: block" class="container mt-5">
           <div class="container-fluid">
             <div class="row">
               <div class="col-md-6 d-none d-md-block p-0">
                 <img
                   src="img/add.png"
                   alt="Ajouter un produit"
-                  class="img-fluid h-100"
+                  class="img-fluid "
+                    style="height: 70%;"
                 />
               </div>
-              <div class="col-md-6 my-auto">
+              <div class="col-md-6 ">
                 <div class="add-product-form mx-auto">
-                  <h3 class="text-center">Ajouter un produit</h3>
+                  <h2 class="text-start mb-5">Ajouter un produit</h2>
                   <form id="addProductForm">
                     <div class="form-group">
                       <label for="productName">Libellé du produit</label>
@@ -187,6 +188,7 @@
                         class="form-control"
                         id="productName"
                         required
+                        placeholder="ex: Produit 1"
                       />
                     </div>
                     <div class="form-group">
@@ -196,6 +198,7 @@
                         class="form-control"
                         id="productPrice"
                         required
+                        placeholder="ex: 250"
                       />
                     </div>
                     <div class="form-group">
@@ -205,6 +208,7 @@
                         class="form-control"
                         id="productQuantity"
                         required
+                        placeholder="ex: 10"
                       />
                     </div>
                     <div class="form-group">
@@ -216,7 +220,7 @@
                         required
                       />
                     </div>
-                    <button type="submit" class="btn btn-success btn-block">
+                    <button type="submit" class="btn btn-success mt-3 mb-3" style="background-color: #2ECC71; border: #2ECC71 1px solid; border-radius: 25px; color: white;">
                       Ajouter
                     </button>
                   </form>
@@ -314,7 +318,7 @@
           </div>
         </div>
       </div>
-    </div>
+    
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
