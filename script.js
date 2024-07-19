@@ -155,39 +155,43 @@ document.addEventListener("DOMContentLoaded", async function () {
 
  async function fetchAndDisplayProducts() {
     console.log("Fetching Products");
-
+  
     if (!currentUserId) {
       console.error("ID utilisateur non fourni.");
       return;
     }
-
+  
     const selectedDate = filterDateInput.value;
-
+  
     // Construire la requête en fonction de la présence ou non de selectedDate
     let query = database.from("products").select("*").eq("user_id", currentUserId);
-
+  
     if (selectedDate) {
       query = query.eq("date", selectedDate); // Filtrer par date si elle est sélectionnée
     }
-
+  
     const { data, error } = await query;
-
+  
     if (error) {
       console.error("Erreur lors de la récupération des produits:", error.message);
       alert("Erreur lors de la récupération des produits: " + error.message);
       return;
     }
-
+  
     const productList = document.getElementById("productList");
     const noProductsMessage = document.getElementById("noProductsMessage");
-    
+    const totalPriceSection = document.getElementById("totalPriceSection");
+    const totalPriceElement = document.getElementById("totalPrice");
+  
     productList.innerHTML = "";
-    
+  
     if (data.length === 0) {
       noProductsMessage.style.display = "block";
+      totalPriceSection.style.display = "none"; // Cacher la section du total si pas de produits
     } else {
       noProductsMessage.style.display = "none";
-
+      let totalPrice = 0; // Initialiser le total à 0
+  
       data.forEach((product) => {
         const productCard = document.createElement("div");
         productCard.className = "col-md-4 mb-4";
@@ -204,20 +208,30 @@ document.addEventListener("DOMContentLoaded", async function () {
                   Marquer comme acheté
                 </label>
               </div>
-              <button class="btn btn-danger" onclick="deleteProduct(${product.id})">Supprimer</button>
-              <button class="btn btn-primary" onclick="editProduct(${product.id})">Modifier</button>
+              <div class="d-flex justify-content-start align-items-center" style="gap: 100px;">
+              <button onclick="deleteProduct(${product.id})"><img src="img/delete1.svg" alt="" /></button>
+              <button onclick="editProduct(${product.id})"><img src="img/edit.svg" alt="" /></button>
+              </div>
             </div>
           </div>
         `;
         productList.appendChild(productCard);
-
+  
         const checkbox = productCard.querySelector('input[type="checkbox"]');
         checkbox.addEventListener("change", async () => {
           await markAsPurchased(product.id, checkbox.checked);
         });
+  
+        // Ajouter au total
+        totalPrice += product.price * product.quantity;
       });
+  
+      // Afficher le total
+      totalPriceElement.innerText = totalPrice;
+      totalPriceSection.style.display = "block";
     }
   }
+  
 
   async function markAsPurchased(productId, isPurchased) {
     if (!currentUserId) {
@@ -345,5 +359,6 @@ document.addEventListener("DOMContentLoaded", async function () {
  // Annuler la modification du produit
  cancelEditButton.addEventListener("click", function() {
    editProductSection.style.display = "none";
+   productListSection.style.display = "block";
  });
 });
