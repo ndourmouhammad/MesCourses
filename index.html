@@ -174,7 +174,7 @@
                   src="img/add.png"
                   alt="Ajouter un produit"
                   class="img-fluid "
-                    style="height: 70%;"
+                  style="height: 70%;"
                 />
               </div>
               <div class="col-md-6 ">
@@ -229,7 +229,7 @@
             </div>
           </div>
         </div>
-        <div id="productListSection" style="display: none">
+        <div id="productListSection" style="display: none" class="container mt-5">
           <div class="text-center mb-4">
             <h2>Mes produits</h2>
           </div>
@@ -247,23 +247,24 @@
           <div class="row" id="productList">
             <!-- Product Cards will be displayed here -->
           </div>
-          <div id="totalPriceSection" style="display: none;">
+          <div id="totalPriceSection" style="display: none;" >
             <h4>Total des produits : <span id="totalPrice"></span> FCFA</h4>
           </div>
         </div>
-        <div id="editProductSection" style="display: none">
+        <div id="editProductSection" style="display: none" class="container mt-5">
           <div class="container-fluid">
             <div class="row">
               <div class="col-md-6 d-none d-md-block p-0">
                 <img
                   src="img/login.png"
                   alt="Modifier le produit"
-                  class="img-fluid h-100"
+                  class="img-fluid "
+                  style="height: 70%;"
                 />
               </div>
-              <div class="col-md-6 my-auto">
+              <div class="col-md-6 ">
                 <div class="edit-product-form mx-auto">
-                  <h3 class="text-center">Modifier le produit</h3>
+                  <h2 class="text-start mb-5">Modifier le produit</h2>
                   <form id="editProductForm">
                     <input type="hidden" id="editProductId" />
                     <div class="form-group">
@@ -302,15 +303,17 @@
                         required
                       />
                     </div>
-                    <button type="submit" class="btn btn-success btn-block">
-                      Mettre à Jour
-                    </button>
-                    <button
-                      id="cancelEditButton"
-                      class="btn btn-secondary btn-block mt-2"
-                    >
-                      Annuler
-                    </button>
+                    <div class="d-flex justify-content-start align-items-center" style="gap: 100px;">
+                      <button type="submit" class="btn btn-warning">
+                        Mettre à Jour
+                      </button>
+                      <button
+                        id="cancelEditButton"
+                        class="btn btn-danger"
+                      >
+                        Annuler
+                      </button>
+                    </div>
                   </form>
                 </div>
               </div>

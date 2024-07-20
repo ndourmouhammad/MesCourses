@@ -154,103 +154,109 @@ document.addEventListener("DOMContentLoaded", async function () {
  });
 
  async function fetchAndDisplayProducts() {
-    console.log("Fetching Products");
-  
-    if (!currentUserId) {
-      console.error("ID utilisateur non fourni.");
-      return;
-    }
-  
-    const selectedDate = filterDateInput.value;
-  
-    // Construire la requête en fonction de la présence ou non de selectedDate
-    let query = database.from("products").select("*").eq("user_id", currentUserId);
-  
-    if (selectedDate) {
-      query = query.eq("date", selectedDate); // Filtrer par date si elle est sélectionnée
-    }
-  
-    const { data, error } = await query;
-  
-    if (error) {
-      console.error("Erreur lors de la récupération des produits:", error.message);
-      alert("Erreur lors de la récupération des produits: " + error.message);
-      return;
-    }
-  
-    const productList = document.getElementById("productList");
-    const noProductsMessage = document.getElementById("noProductsMessage");
-    const totalPriceSection = document.getElementById("totalPriceSection");
-    const totalPriceElement = document.getElementById("totalPrice");
-  
-    productList.innerHTML = "";
-  
-    if (data.length === 0) {
-      noProductsMessage.style.display = "block";
-      totalPriceSection.style.display = "none"; // Cacher la section du total si pas de produits
-    } else {
-      noProductsMessage.style.display = "none";
-      let totalPrice = 0; // Initialiser le total à 0
-  
-      data.forEach((product) => {
-        const productCard = document.createElement("div");
-        productCard.className = "col-md-4 mb-4";
-        productCard.innerHTML = `
-          <div class="card mb-3 ${product.purchased ? 'purchased' : ''}">
-            <div class="card-body">
-              <h5 class="card-title">Libelle : ${product.name}</h5>
-              <p class="card-text">Prix : ${product.price} FCFA</p>
-              <p class="card-text">Quantité : ${product.quantity}</p>
-              
-              <div>
-                <label>
-                  <input type="checkbox" ${product.purchased ? 'checked' : ''} data-product-id="${product.id}">
-                  Marquer comme acheté
-                </label>
-              </div>
-              <div class="d-flex justify-content-start align-items-center" style="gap: 100px;">
-              <button onclick="deleteProduct(${product.id})"><img src="img/delete1.svg" alt="" /></button>
-              <button onclick="editProduct(${product.id})"><img src="img/edit.svg" alt="" /></button>
-              </div>
+  console.log("Fetching Products");
+
+  if (!currentUserId) {
+    console.error("ID utilisateur non fourni.");
+    return;
+  }
+
+  const selectedDate = filterDateInput.value;
+
+  // Construire la requête en fonction de la présence ou non de selectedDate
+  let query = database.from("products").select("*").eq("user_id", currentUserId);
+
+  if (selectedDate) {
+    query = query.eq("date", selectedDate); // Filtrer par date si elle est sélectionnée
+  }
+
+  const { data, error } = await query;
+
+  if (error) {
+    console.error("Erreur lors de la récupération des produits:", error.message);
+    alert("Erreur lors de la récupération des produits: " + error.message);
+    return;
+  }
+
+  const productList = document.getElementById("productList");
+  const noProductsMessage = document.getElementById("noProductsMessage");
+  const totalPriceSection = document.getElementById("totalPriceSection");
+  const totalPriceElement = document.getElementById("totalPrice");
+
+  productList.innerHTML = "";
+
+  if (data.length === 0) {
+    noProductsMessage.style.display = "block";
+    totalPriceSection.style.display = "none"; // Cacher la section du total si pas de produits
+  } else {
+    noProductsMessage.style.display = "none";
+    let totalPrice = 0; // Initialiser le total à 0
+
+    data.forEach((product) => {
+      const productCard = document.createElement("div");
+      productCard.className = `col-md-4 mb-4 `;
+      productCard.innerHTML = `
+        <div class="card mb-3 ${product.purchased ? 'purchased' : ''}">
+          <div class="card-body">
+            <h5 class="card-title">Libelle : ${product.name}</h5>
+            <p class="card-text">Prix : ${product.price} FCFA</p>
+            <p class="card-text">Quantité : ${product.quantity}</p>
+            
+            <div>
+              <label>
+                <input type="checkbox" ${product.purchased ? 'checked' : ''} data-product-id="${product.id}">
+                Marquer comme acheté
+              </label>
             </div>
+           <div class="d-flex justify-content-start align-items-center" style="gap: 10px;">
+          <button class="btn btn-danger" onclick="deleteProduct(${product.id})">
+            <img src="img/delete1.svg" alt="Supprimer" style="width: 20px; height: 20px;"/>
+          </button>
+          <button class="btn btn-warning" onclick="editProduct(${product.id})">
+            <img src="img/edit.svg" alt="Éditer" style="width: 20px; height: 20px;"/>
+          </button>
+        </div>
           </div>
-        `;
-        productList.appendChild(productCard);
-  
-        const checkbox = productCard.querySelector('input[type="checkbox"]');
-        checkbox.addEventListener("change", async () => {
-          await markAsPurchased(product.id, checkbox.checked);
-        });
-  
-        // Ajouter au total
-        totalPrice += product.price * product.quantity;
+        </div>
+      `;
+      productList.appendChild(productCard);
+
+      const checkbox = productCard.querySelector('input[type="checkbox"]');
+      checkbox.addEventListener("change", async () => {
+        await markAsPurchased(product.id, checkbox.checked);
       });
-  
-      // Afficher le total
-      totalPriceElement.innerText = totalPrice;
-      totalPriceSection.style.display = "block";
-    }
+
+      // Ajouter au total
+      totalPrice += product.price * product.quantity;
+    });
+
+    // Afficher le total
+    totalPriceElement.innerText = totalPrice;
+    totalPriceSection.style.display = "block";
+    totalPriceSection.style.marginBottom = "50px";
   }
-  
+}
 
-  async function markAsPurchased(productId, isPurchased) {
-    if (!currentUserId) {
-      alert("Veuillez vous connecter d'abord.");
-      return;
-    }
-
-    const { error } = await database.from("products")
-      .update({ purchased: isPurchased })
-      .eq("id", productId);
-
-    if (error) {
-      alert("Erreur lors de la mise à jour du produit: " + error.message);
-      return;
-    }
-
-    alert("Statut du produit mis à jour !");
-    await fetchAndDisplayProducts(); // Rafraîchir la liste des produits
+async function markAsPurchased(productId, isPurchased) {
+  if (!currentUserId) {
+    alert("Veuillez vous connecter d'abord.");
+    return;
   }
+
+  const { error } = await database.from("products")
+    .update({ purchased: isPurchased })
+    .eq("id", productId);
+
+  if (error) {
+    alert("Erreur lors de la mise à jour du produit: " + error.message);
+    return;
+  }
+
+  alert("Statut du produit mis à jour !");
+
+  await fetchAndDisplayProducts(); // Rafraîchir la liste des produits
+}
+
 
   window.deleteProduct = async function(productId) {
     if (!currentUserId) {
