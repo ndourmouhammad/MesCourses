@@ -67,8 +67,9 @@ document.addEventListener("DOMContentLoaded", async function () {
       return;
     }
 
-    await database.from("users").insert([{ id: user.user.id, name, email }]);
-    alert("Inscription réussie !");
+    await database.from("users").insert([{ id: user.user.id, name, email }]).then(() => {
+      Swal.fire("Inscription réussie!");
+    });
     signupPage.style.display = "none";
     loginPage.style.display = "block";
   });
@@ -91,7 +92,9 @@ document.addEventListener("DOMContentLoaded", async function () {
       return;
     }
 
-    console.log("Connexion réussie:", user);
+    Swal.fire("Connexion réussie avec succès!");
+  
+
 
     if (user) {
       console.log("User Object:", user);
@@ -141,7 +144,7 @@ document.addEventListener("DOMContentLoaded", async function () {
       return;
     }
 
-    alert("Produit ajouté avec succès !");
+    Swal.fire("Produit ajouté avec succès!");
     addProductForm.reset();
     await fetchAndDisplayProducts(); // Rafraîchir la liste des produits
   });
@@ -209,11 +212,11 @@ document.addEventListener("DOMContentLoaded", async function () {
               </label>
             </div>
            <div class="d-flex justify-content-start align-items-center" style="gap: 10px;">
-          <button class="btn btn-danger" onclick="deleteProduct(${product.id})">
-            <img src="img/delete1.svg" alt="Supprimer" style="width: 20px; height: 20px;"/>
+          <button class="btn btn-outline-danger" onclick="deleteProduct(${product.id})">
+            <img src="img/delete1.svg" alt="Supprimer"/>
           </button>
-          <button class="btn btn-warning" onclick="editProduct(${product.id})">
-            <img src="img/edit.svg" alt="Éditer" style="width: 20px; height: 20px;"/>
+          <button class="btn btn-outline-warning" onclick="editProduct(${product.id})">
+            <img src="img/edit.svg" alt="Éditer" />
           </button>
         </div>
           </div>
@@ -252,7 +255,7 @@ async function markAsPurchased(productId, isPurchased) {
     return;
   }
 
-  alert("Statut du produit mis à jour !");
+  Swal.fire("Statut du produit mis à jour !");
 
   await fetchAndDisplayProducts(); // Rafraîchir la liste des produits
 }
@@ -290,7 +293,7 @@ async function markAsPurchased(productId, isPurchased) {
       return;
     }
 
-    alert("Produit supprimé avec succès !");
+    Swal.fire("Produit supprimé avec succès!");
     await fetchAndDisplayProducts(); // Rafraîchir la liste des produits
   };
 
@@ -356,7 +359,7 @@ async function markAsPurchased(productId, isPurchased) {
      return;
    }
 
-   alert("Produit modifié avec succès !");
+   Swal.fire("Produit modifié avec succès!");
    editProductSection.style.display = "none";
    productListSection.style.display = "block";
    await fetchAndDisplayProducts(); // Rafraîchir la liste des produits

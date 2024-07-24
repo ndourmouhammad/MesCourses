@@ -64,7 +64,7 @@ body, html {
     margin: auto;
   }
   
-  .btn-danger {
+  /* .btn-danger {
     background-color: #ff4c4c;
     border-color: #ff4c4c;
   }
@@ -72,11 +72,11 @@ body, html {
   .btn-warning {
     background-color: #ffc107;
     border-color: #ffc107;
-  }
+  } */
   
-  .btn-danger:hover, .btn-warning:hover {
+  /* .btn-danger:hover, .btn-warning:hover {
     opacity: 0.8;
-  }
+  } */
   
 
 /* Media queries for larger screens */
