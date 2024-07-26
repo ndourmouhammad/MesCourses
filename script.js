@@ -22,7 +22,20 @@ document.addEventListener("DOMContentLoaded", async function () {
   const showAddProductSectionButton = document.getElementById("showAddProductSection");
   const showProductListSectionButton = document.getElementById("showProductListSection");
 
-  let currentUserId = null; // Variable pour stocker l'ID de l'utilisateur connecté
+  const filterDateInput = document.getElementById("filterDate");
+
+  let currentUserId = localStorage.getItem('userId'); // Charger l'ID de l'utilisateur depuis le localStorage
+
+  if (currentUserId) {
+    signupPage.style.display = "none";
+    loginPage.style.display = "none";
+    appSection.style.display = "block";
+    await fetchAndDisplayProducts(); // Passer l'ID de l'utilisateur à fetchAndDisplayProducts
+  } else {
+    signupPage.style.display = "block";
+    loginPage.style.display = "none";
+    appSection.style.display = "none";
+  }
 
   showSignupPageButton.addEventListener("click", function () {
     signupPage.style.display = "block";
@@ -92,14 +105,24 @@ document.addEventListener("DOMContentLoaded", async function () {
       return;
     }
 
-    Swal.fire("Connexion réussie avec succès!");
-  
-
+    //Swal.fire("Connexion réussie avec succès!");
+    Swal.fire({
+      title: 'Connexion réussie!',
+      icon: 'success',
+      confirmButtonText: 'OK',
+      customClass: {
+        confirmButton: 'custom-confirm-button' // Ajoutez une classe CSS personnalisée
+      }
+    });
 
     if (user) {
       console.log("User Object:", user);
       currentUserId = user.id; // Stockage de l'ID de l'utilisateur connecté
       console.log("User ID:", currentUserId);
+
+      // Sauvegarder les informations de l'utilisateur dans le localStorage
+      localStorage.setItem('userId', currentUserId);
+      localStorage.setItem('userEmail', email); // Vous pouvez également stocker d'autres informations
 
       signupPage.style.display = "none";
       loginPage.style.display = "none";
@@ -112,6 +135,11 @@ document.addEventListener("DOMContentLoaded", async function () {
 
   logoutButton.addEventListener("click", async function () {
     await database.auth.signOut();
+
+    // Effacer les informations de session du localStorage
+    localStorage.removeItem('userId');
+    localStorage.removeItem('userEmail');
+
     currentUserId = null; // Réinitialisation de l'ID utilisateur
     appSection.style.display = "none";
     signupPage.style.display = "block";
@@ -144,230 +172,129 @@ document.addEventListener("DOMContentLoaded", async function () {
       return;
     }
 
-    Swal.fire("Produit ajouté avec succès!");
+    Swal.fire("Produit ajouté avec succès!");
     addProductForm.reset();
     await fetchAndDisplayProducts(); // Rafraîchir la liste des produits
   });
 
- // Référence au champ de filtrage par date
- const filterDateInput = document.getElementById("filterDate");
+  filterDateInput.addEventListener("change", async function () {
+    await fetchAndDisplayProducts(); // Rafraîchir la liste des produits avec le filtre appliqué
+  });
 
- filterDateInput.addEventListener("change", async function () {
-   await fetchAndDisplayProducts(); // Rafraîchir la liste des produits avec le filtre appliqué
- });
+  async function fetchAndDisplayProducts() {
+    console.log("Fetching Products");
 
- async function fetchAndDisplayProducts() {
-  console.log("Fetching Products");
+    if (!currentUserId) {
+      console.error("ID utilisateur non fourni.");
+      return;
+    }
 
-  if (!currentUserId) {
-    console.error("ID utilisateur non fourni.");
-    return;
-  }
+    const selectedDate = filterDateInput.value;
 
-  const selectedDate = filterDateInput.value;
+    // Construire la requête en fonction de la présence ou non de selectedDate
+    let query = database.from("products").select("*").eq("user_id", currentUserId);
 
-  // Construire la requête en fonction de la présence ou non de selectedDate
-  let query = database.from("products").select("*").eq("user_id", currentUserId);
+    if (selectedDate) {
+      query = query.eq("date", selectedDate); // Filtrer par date si elle est sélectionnée
+    }
 
-  if (selectedDate) {
-    query = query.eq("date", selectedDate); // Filtrer par date si elle est sélectionnée
-  }
+    const { data, error } = await query;
 
-  const { data, error } = await query;
+    if (error) {
+      console.error("Erreur lors de la récupération des produits:", error.message);
+      alert("Erreur lors de la récupération des produits: " + error.message);
+      return;
+    }
 
-  if (error) {
-    console.error("Erreur lors de la récupération des produits:", error.message);
-    alert("Erreur lors de la récupération des produits: " + error.message);
-    return;
-  }
+    const productList = document.getElementById("productList");
+    const noProductsMessage = document.getElementById("noProductsMessage");
+    const totalPriceSection = document.getElementById("totalPriceSection");
+    const totalPriceElement = document.getElementById("totalPrice");
 
-  const productList = document.getElementById("productList");
-  const noProductsMessage = document.getElementById("noProductsMessage");
-  const totalPriceSection = document.getElementById("totalPriceSection");
-  const totalPriceElement = document.getElementById("totalPrice");
+    productList.innerHTML = "";
 
-  productList.innerHTML = "";
+    if (data.length === 0) {
+      noProductsMessage.style.display = "block";
+      totalPriceSection.style.display = "none"; // Cacher la section du total si pas de produits
+    } else {
+      noProductsMessage.style.display = "none";
+      let totalPrice = 0; // Initialiser le total à 0
 
-  if (data.length === 0) {
-    noProductsMessage.style.display = "block";
-    totalPriceSection.style.display = "none"; // Cacher la section du total si pas de produits
-  } else {
-    noProductsMessage.style.display = "none";
-    let totalPrice = 0; // Initialiser le total à 0
-
-    data.forEach((product) => {
-      const productCard = document.createElement("div");
-      productCard.className = `col-md-4 mb-4 `;
-      productCard.innerHTML = `
-        <div class="card mb-3 ${product.purchased ? 'purchased' : ''}">
-          <div class="card-body">
-            <h5 class="card-title">Libelle : ${product.name}</h5>
-            <p class="card-text">Prix : ${product.price} FCFA</p>
-            <p class="card-text">Quantité : ${product.quantity}</p>
-            
-            <div>
-              <label>
-                <input type="checkbox" ${product.purchased ? 'checked' : ''} data-product-id="${product.id}">
-                Marquer comme acheté
-              </label>
+      data.forEach((product) => {
+        const productCard = document.createElement("div");
+        productCard.className = `col-md-4 mb-4 `;
+        productCard.innerHTML = `
+          <div class="card mb-3 ${product.purchased ? 'purchased' : ''}">
+            <div class="card-body">
+              <h5 class="card-title">Libelle : ${product.name}</h5>
+              <p class="card-text">Prix : ${product.price} FCFA</p>
+              <p class="card-text">Quantité : ${product.quantity}</p>
+              
+              <button class="btn btn-info" onclick="editProduct(${product.id})">Modifier</button>
+              <button class="btn btn-danger" onclick="deleteProduct(${product.id})">Supprimer</button>
             </div>
-           <div class="d-flex justify-content-start align-items-center" style="gap: 10px;">
-          <button class="btn btn-outline-danger" onclick="deleteProduct(${product.id})">
-            <img src="img/delete1.svg" alt="Supprimer"/>
-          </button>
-          <button class="btn btn-outline-warning" onclick="editProduct(${product.id})">
-            <img src="img/edit.svg" alt="Éditer" />
-          </button>
-        </div>
           </div>
-        </div>
-      `;
-      productList.appendChild(productCard);
+        `;
+        productList.appendChild(productCard);
 
-      const checkbox = productCard.querySelector('input[type="checkbox"]');
-      checkbox.addEventListener("change", async () => {
-        await markAsPurchased(product.id, checkbox.checked);
+        totalPrice += parseFloat(product.price); // Accumuler le total
       });
 
-      // Ajouter au total
-      totalPrice += product.price * product.quantity;
-    });
-
-    // Afficher le total
-    totalPriceElement.innerText = totalPrice;
-    totalPriceSection.style.display = "block";
-    totalPriceSection.style.marginBottom = "50px";
-  }
-}
-
-async function markAsPurchased(productId, isPurchased) {
-  if (!currentUserId) {
-    alert("Veuillez vous connecter d'abord.");
-    return;
+      totalPriceSection.style.display = "block";
+      totalPriceElement.textContent = `Prix total: ${totalPrice} FCFA`;
+    }
   }
 
-  const { error } = await database.from("products")
-    .update({ purchased: isPurchased })
-    .eq("id", productId);
+  window.editProduct = async function (productId) {
+    const { data: product, error } = await database.from("products").select("*").eq("id", productId).single();
 
-  if (error) {
-    alert("Erreur lors de la mise à jour du produit: " + error.message);
-    return;
-  }
-
-  Swal.fire("Statut du produit mis à jour !");
-
-  await fetchAndDisplayProducts(); // Rafraîchir la liste des produits
-}
-
-
-  window.deleteProduct = async function(productId) {
-    if (!currentUserId) {
-      alert("Veuillez vous connecter d'abord.");
+    if (error) {
+      alert("Erreur lors de la récupération du produit: " + error.message);
       return;
     }
 
-    const { data: product, error: fetchError } = await database
-      .from("products")
-      .select("user_id")
-      .eq("id", productId)
-      .single();
+    document.getElementById("editProductName").value = product.name;
+    document.getElementById("editProductPrice").value = product.price;
+    document.getElementById("editProductQuantity").value = product.quantity;
+    document.getElementById("editProductDate").value = product.date;
 
-    if (fetchError) {
-      alert("Erreur lors de la récupération du produit: " + fetchError.message);
-      return;
-    }
+    const updateButton = document.getElementById("updateProductButton");
+    updateButton.onclick = async function () {
+      const name = document.getElementById("editProductName").value;
+      const price = document.getElementById("editProductPrice").value;
+      const quantity = document.getElementById("editProductQuantity").value;
+      const date = document.getElementById("editProductDate").value;
 
-    if (product.user_id !== currentUserId) {
-      alert("Vous ne pouvez pas supprimer ce produit.");
-      return;
-    }
+      const { error } = await database.from("products").update({
+        name,
+        price,
+        quantity,
+        date,
+      }).eq("id", productId);
 
-    const { error: deleteError } = await database
-      .from("products")
-      .delete()
-      .eq("id", productId);
+      if (error) {
+        alert("Erreur lors de la mise à jour du produit: " + error.message);
+        return;
+      }
 
-    if (deleteError) {
-      alert("Erreur lors de la suppression du produit: " + deleteError.message);
-      return;
-    }
+      Swal.fire("Produit mis à jour avec succès!");
+      await fetchAndDisplayProducts(); // Rafraîchir la liste des produits
+      editProductSection.style.display = "none"; // Cacher la section de modification
+    };
 
-    Swal.fire("Produit supprimé avec succès!");
-    await fetchAndDisplayProducts(); // Rafraîchir la liste des produits
+    addProductSection.style.display = "none";
+    editProductSection.style.display = "block";
   };
 
- // Références aux éléments du formulaire de modification
- const editProductForm = document.getElementById("editProductForm");
- const cancelEditButton = document.getElementById("cancelEditButton");
- 
+  window.deleteProduct = async function (productId) {
+    const { error } = await database.from("products").delete().eq("id", productId);
 
- // Afficher le formulaire de modification avec les données du produit
- window.editProduct = async function(productId) {
-   if (!currentUserId) {
-     alert("Veuillez vous connecter d'abord.");
-     return;
-   }
+    if (error) {
+      alert("Erreur lors de la suppression du produit: " + error.message);
+      return;
+    }
 
-   const { data: product, error } = await database
-     .from("products")
-     .select("*")
-     .eq("id", productId)
-     .single();
-
-   if (error) {
-     alert("Erreur lors de la récupération du produit: " + error.message);
-     return;
-   }
-
-   if (product.user_id !== currentUserId) {
-     alert("Vous ne pouvez pas modifier ce produit.");
-     return;
-   }
-
-   document.getElementById("editProductId").value = product.id;
-   document.getElementById("editProductName").value = product.name;
-   document.getElementById("editProductPrice").value = product.price;
-   document.getElementById("editProductQuantity").value = product.quantity;
-   document.getElementById("editProductDate").value = product.date;
-
-   editProductSection.style.display = "block";
-   productListSection.style.display = "none";
- };
-
- // Soumettre les modifications du produit
- editProductForm.addEventListener("submit", async function (e) {
-   e.preventDefault();
-
-   const productId = document.getElementById("editProductId").value;
-   const name = document.getElementById("editProductName").value;
-   const price = document.getElementById("editProductPrice").value;
-   const quantity = document.getElementById("editProductQuantity").value;
-   const date = document.getElementById("editProductDate").value;
-
-   if (!currentUserId) {
-     alert("Veuillez vous connecter d'abord.");
-     return;
-   }
-
-   const { error } = await database.from("products")
-     .update({ name, price, quantity, date })
-     .eq("id", productId);
-
-   if (error) {
-     alert("Erreur lors de la modification du produit: " + error.message);
-     return;
-   }
-
-   Swal.fire("Produit modifié avec succès!");
-   editProductSection.style.display = "none";
-   productListSection.style.display = "block";
-   await fetchAndDisplayProducts(); // Rafraîchir la liste des produits
- });
-
- // Annuler la modification du produit
- cancelEditButton.addEventListener("click", function() {
-   editProductSection.style.display = "none";
-   productListSection.style.display = "block";
- });
+    Swal.fire("Produit supprimé avec succès!");
+    await fetchAndDisplayProducts(); // Rafraîchir la liste des produits
+  };
 });

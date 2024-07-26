@@ -63,6 +63,18 @@ body, html {
     display: block;
     margin: auto;
   }
+
+  /* Personnaliser le bouton "OK" */
+.custom-confirm-button {
+    background-color: #4CAF50; /* Couleur de fond */
+    color: white; /* Couleur du texte */
+    border: none; /* Supprimer les bordures par défaut */
+  }
+  
+  .custom-confirm-button:hover {
+    background-color: #45a049; /* Couleur de fond lors du survol */
+  }
+  
   
   /* .btn-danger {
     background-color: #ff4c4c;
