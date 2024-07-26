@@ -57,7 +57,8 @@ body, html {
 }
 
 .purchased {
-    border: 1px solid green;
+    border: 5px solid green;
+    
   }
   .btn img {
     display: block;
@@ -74,7 +75,22 @@ body, html {
   .custom-confirm-button:hover {
     background-color: #45a049; /* Couleur de fond lors du survol */
   }
+/* Style pour les boutons de SweetAlert2 */
+.btn-custom-success {
+    background-color: #28a745; /* Couleur verte */
+    border-color: #28a745;
+  }
   
+  .btn-custom-error {
+    background-color: #dc3545; /* Couleur rouge */
+    border-color: #dc3545;
+  }
+  
+  .btn-custom-info {
+    background-color: #17a2b8; /* Couleur bleu */
+    border-color: #17a2b8;
+  }
+    
   
   /* .btn-danger {
     background-color: #ff4c4c;
